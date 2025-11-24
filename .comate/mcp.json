@@ -1,12 +1,15 @@
 {
-  "mcpServers": {
-    "eme0-emotion-engine": {
-      "command": "/Users/chenlianghong/Documents/comate大赛/2051118/code/.conda/bin/python",
-      "args": ["/Users/chenlianghong/Documents/comate大赛/2051118/code/main.py"],
-      "env": {
-        "PYTHONPATH": "/Users/chenlianghong/Documents/comate大赛/2051118/code/src"
-      },
-      "cwd": "/Users/chenlianghong/Documents/comate大赛/2051118/code"
+    "mcpServers": {
+        "eme0-emotion-engine": {
+            "command": "/Users/chenlianghong/Documents/comate大赛/2051118/code/.conda/bin/python",
+            "args": [
+                "/Users/chenlianghong/Documents/comate大赛/2051118/code/main.py"
+            ],
+            "env": {
+                "PYTHONPATH": "/Users/chenlianghong/Documents/comate大赛/2051118/code/src"
+            },
+            "cwd": "/Users/chenlianghong/Documents/comate大赛/2051118/code",
+            "disabled": true
+        }
     }
-  }
 }

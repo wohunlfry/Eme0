@@ -249,11 +249,10 @@ async def test_case_6(client: Eme0TestClient):
     long_term_result = await client.update_long_term(user_id, session_id)
     print(f"\n📝 长期记忆更新: {'成功' if long_term_result['success'] else '失败'}")
 
-
 async def test_case_5(client: Eme0TestClient):
-    """测试用例5: 增强型长期情绪画像和趋势分析"""
+    """测试用例5: 增强型长期情绪画像和趋势分析（用户画像存在场景）"""
     print("\n" + "=" * 60)
-    print("📋 测试用例5: 增强型情绪画像和趋势分析")
+    print("📋 测试用例5: 增强型情绪画像和趋势分析 - 用户画像存在场景")
     print("=" * 60)
     
     user_id = "user005"
@@ -267,6 +266,7 @@ async def test_case_5(client: Eme0TestClient):
         "我学会接受这种复杂性，这就是真实的人生"
     ]
     
+    # 在每个对话轮次中检查用户画像状态
     for i, dialogue in enumerate(dialogues, 1):
         print(f"\n🗣️  第{i}轮对话: {dialogue}")
         
@@ -284,31 +284,46 @@ async def test_case_5(client: Eme0TestClient):
         if context.long_term_profile != "历史情绪数据获取失败":
             print(f"   📚 长期画像: {context.long_term_profile}")
         
-        # 测试期间显示详细画像和趋势分析
-        if i == len(dialogues):  # 最后一轮对话时
-            # 获取详细画像
+        # 在中间轮次检查用户画像状态
+        if i == 3:  # 第三轮对话时检查
             profile_result = await client.get_detailed_profile(user_id)
             if profile_result.get('success'):
                 profile = profile_result['profile']
-                print(f"   🔍 详细画像:")
-                print(f"      情绪分布: {profile.get('dominant_emotions', {})}")
-                print(f"      情绪稳定性: {profile.get('emotional_stability', 0):.3f}")
-                if profile.get('personality_traits'):
-                    print(f"      个性特征: {profile['personality_traits']}")
-            
-            # 分析情绪趋势
-            trend_result = await client.analyze_emotion_trend(user_id, 12)
-            if trend_result.get('success'):
-                trend_data = trend_result['trend_analysis']
-                if 'dominant_emotions' in trend_data:
-                    print(f"   📈 趋势分析: {trend_data['dominant_emotions']}")
-                if 'emotional_volatility' in trend_data:
-                    print(f"      情绪波动性: {trend_data['emotional_volatility']:.3f}")
+                print(f"   🔍 详细画像检查: 已存在")
+            else:
+                print(f"   🔍 详细画像检查: 尚未建立, 原因: {profile_result.get('error', '未知错误')}")
         
         time.sleep(1)
     
+    # 在更新长期记忆前确保用户画像建立
     long_term_result = await client.update_long_term(user_id, session_id)
     print(f"\n📝 长期记忆更新: {'成功' if long_term_result['success'] else '失败'}")
+    
+    # 在测试结束时详细检查用户画像和趋势
+    print(f"\n📊 最终用户画像和趋势分析:")
+    
+    # 获取详细画像
+    profile_result = await client.get_detailed_profile(user_id)
+    if profile_result.get('success'):
+        profile = profile_result['profile']
+        print(f"   ✅ 用户画像存在:")
+        print(f"      情绪分布: {profile.get('dominant_emotions', {})}")
+        print(f"      情绪稳定性: {profile.get('emotional_stability', 0):.3f}")
+        if profile.get('personality_traits'):
+            print(f"      个性特征: {profile['personality_traits']}")
+    else:
+        print(f"   ❌ 用户画像不存在: {profile_result.get('error', '未知错误')}")
+    
+    # 分析情绪趋势
+    trend_result = await client.analyze_emotion_trend(user_id, 12)
+    if trend_result.get('success'):
+        trend_data = trend_result['trend_analysis']
+        if 'dominant_emotions' in trend_data:
+            print(f"   📈 趋势分析: {trend_data['dominant_emotions']}")
+        if 'emotional_volatility' in trend_data:
+            print(f"      情绪波动性: {trend_data['emotional_volatility']:.3f}")
+    else:
+        print(f"   ❌ 趋势分析失败: {trend_result.get('error', '未知错误')}")
 
 
 async def main():
